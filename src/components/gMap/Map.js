@@ -27,6 +27,7 @@ const Map = ({ paths, stops }) => {
   const centerpathLng = paths[center + 5]?.lng || 0;
 
   useEffect(() => {
+    console.log("paths1", paths);
     if (paths.length > 0) {
       calculatePath();
       startSimulation(); // Start simulation automatically
@@ -58,6 +59,7 @@ const Map = ({ paths, stops }) => {
   };
 
   const moveObject = () => {
+    console.log("moveObject");
     if (paths.length < 2) {
         return; // Need at least two points to interpolate
     }
@@ -107,6 +109,7 @@ const Map = ({ paths, stops }) => {
   };
 
   const startSimulation = useCallback(() => {
+    console.log("startSimulation");
     if (interval) {
       window.clearInterval(interval);
     }
