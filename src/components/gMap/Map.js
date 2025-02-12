@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   GoogleMap,
   withScriptjs,
@@ -25,6 +25,8 @@ const Map = ({ paths, stops }) => {
   const center = parseInt(paths.length / 2);
   const centerPathLat = paths[center]?.lat || 0;
   const centerpathLng = paths[center + 5]?.lng || 0;
+
+  const mapRef = useRef(null); // Reference to the map instance
 
   useEffect(() => {
     console.log("paths1", paths);
@@ -167,12 +169,28 @@ const Map = ({ paths, stops }) => {
         marker.style.transform = `rotate(${actualAngle}deg)`;
     }
   };
+
+  const fitMapToBounds = () => {
+    if (mapRef.current && paths.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds();
+      paths.forEach(({ lat, lng }) => {
+        bounds.extend(new window.google.maps.LatLng(lat, lng));
+      });
+      mapRef.current.fitBounds(bounds);
+    }
+  };
+
+  useEffect(() => {
+    fitMapToBounds(); // Fit map to bounds whenever paths change
+  }, [paths]);
+
   return (
     <Card variant="outlined">
       <div className='gMapCont'>
         <GoogleMap
+          ref={mapRef} // Attach the ref to the GoogleMap component
           defaultZoom={10}
-          center={currentPosition ? currentPosition.toJSON() : { lat: 0, lng: 0 }} // Focus on current position
+          center={currentPosition ? currentPosition.toJSON() : { lat: 0, lng: 0 }}
         >
           <Polyline
             path={paths.filter(p => isValidCoordinate(p.lat) && isValidCoordinate(p.lng))}
