@@ -115,6 +115,10 @@ const Map = ({ paths, stops }) => {
     interval = window.setInterval(moveObject, 5000);
   }, [interval, initialDate]);
 
+  useEffect(() => {
+    console.log("currentPosition", currentPosition);
+  }, [currentPosition]);
+
   const mapUpdate = () => {
     const distance = getDistance();
     if (!distance || paths.length < 2) {
