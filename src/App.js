@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('http://localhost:8000/gps/location');
+        const response = await fetch(`${config.backendUrl}/gps/location`);
         const data = await response.json();
         setLocation(data);
 
