@@ -164,7 +164,6 @@ const Map = ({ paths, stops }) => {
         marker.style.transform = `rotate(${actualAngle}deg)`;
     }
   };
-  console.log("currentPosition", currentPosition);
   return (
     <Card variant="outlined">
       <div className='gMapCont'>
