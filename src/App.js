@@ -17,14 +17,21 @@ function App() {
         const data = await response.json();
         setLocation(data);
 
-        setPath((prevPath) => [
-          ...prevPath,
-          {
-            lat: data.latitude,
-            lng: data.longitude,
-            distance: 0,
-          },
-        ]);
+        setPath((prevPath) => {
+          const newPath = [
+            ...prevPath,
+            {
+              lat: data.latitude,
+              lng: data.longitude,
+              distance: 0,
+            },
+          ];
+          // Limit the path to 100 points
+          if (newPath.length > 100) {
+            newPath.shift(); // Remove the first element
+          }
+          return newPath;
+        });
       } catch (error) {
         console.error('Error fetching location:', error);
       }

@@ -54,56 +54,32 @@ const Map = ({ paths, stops }) => {
   };
 
   const moveObject = () => {
-    const distance = getDistance();
-    if (!distance) {
-      return;
+    if (paths.length < 2) {
+        return; // Need at least two points to interpolate
     }
 
-    let progress = paths.filter(
-      (coordinates) => coordinates.distance < distance
-    );
-
-    const nextLine = paths.find(
-      (coordinates) => coordinates.distance > distance
-    );
-
-    if (!nextLine) {
-      setProgress(progress);
-      window.clearInterval(interval);
-      console.log("Trip Completed!! Thank You !!");
-      return; // it's the end!
-    }
-    const lastLine = progress[progress.length - 1];
+    const lastLine = paths[paths.length - 2];
+    const nextLine = paths[paths.length - 1];
 
     const lastLineLatLng = new window.google.maps.LatLng(
-      lastLine.lat,
-      lastLine.lng
+        lastLine.lat,
+        lastLine.lng
     );
 
     const nextLineLatLng = new window.google.maps.LatLng(
-      nextLine.lat,
-      nextLine.lng
+        nextLine.lat,
+        nextLine.lng
     );
 
-    const totalDistance = nextLine.distance - lastLine.distance;
-    const percentage = (distance - lastLine.distance) / totalDistance;
-
-    if (percentage >= 0 && percentage <= 1) {
-      const position = window.google.maps.geometry.spherical.interpolate(
+    const position = window.google.maps.geometry.spherical.interpolate(
         lastLineLatLng,
         nextLineLatLng,
-        percentage
-      );
+        0.5 // Interpolate halfway for demonstration
+    );
 
-      logCoordinates(progress.concat(position));
-
-      mapUpdate();
-      setProgress(progress.concat(position));
-      setCurrentPosition(position); // Update current position
-      console.log("Updated Current Position:", position.toJSON()); // Log current position
-    } else {
-      console.log("Invalid percentage for interpolation:", percentage);
-    }
+    setProgress(paths);
+    setCurrentPosition(position); // Update current position
+    console.log("Updated Current Position:", position.toJSON()); // Log current position
   };
 
   const calculatePath = () => {
