@@ -117,41 +117,47 @@ const Map = ({ paths, stops }) => {
 
   const mapUpdate = () => {
     const distance = getDistance();
-    if (!distance) {
-      return;
+    if (!distance || paths.length < 2) {
+        return; // Ensure there are at least two points to work with
     }
 
     let progress = paths.filter(
-      (coordinates) => coordinates.distance < distance
+        (coordinates) => coordinates.distance < distance
     );
 
     const nextLine = paths.find(
-      (coordinates) => coordinates.distance > distance
+        (coordinates) => coordinates.distance > distance
     );
 
     let point1, point2;
 
     if (nextLine) {
-      point1 = progress[progress.length - 1];
-      point2 = nextLine;
+        point1 = progress[progress.length - 1];
+        point2 = nextLine;
     } else {
-      point1 = progress[progress.length - 2];
-      point2 = progress[progress.length - 1];
+        point1 = progress[progress.length - 2];
+        point2 = progress[progress.length - 1];
+    }
+
+    // Ensure point1 and point2 are defined
+    if (!point1 || !point2) {
+        console.error("Invalid path points for map update");
+        return;
     }
 
     const point1LatLng = new window.google.maps.LatLng(point1.lat, point1.lng);
     const point2LatLng = new window.google.maps.LatLng(point2.lat, point2.lng);
 
     const angle = window.google.maps.geometry.spherical.computeHeading(
-      point1LatLng,
-      point2LatLng
+        point1LatLng,
+        point2LatLng
     );
     const actualAngle = angle - 90;
 
     const marker = document.querySelector(`[src="${icon1.url}"]`);
 
     if (marker) {
-      marker.style.transform = `rotate(${actualAngle}deg)`;
+        marker.style.transform = `rotate(${actualAngle}deg)`;
     }
   };
   console.log("currentPosition", currentPosition);
