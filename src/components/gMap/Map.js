@@ -171,7 +171,7 @@ const Map = ({ paths, stops }) => {
     <Card variant="outlined">
       <div className='gMapCont'>
         <GoogleMap
-          defaultZoom={17}
+          defaultZoom={10}
           center={currentPosition ? currentPosition.toJSON() : { lat: 0, lng: 0 }} // Focus on current position
         >
           <Polyline
