@@ -41,7 +41,10 @@ const Map = ({ paths, stops }) => {
   }, [paths]);
 
   useEffect(() => {
-    mapUpdate();
+    if (paths.length > 1) {
+      moveObject();
+      mapUpdate();
+    }
   }, [paths, progress]);
 
   const getDistance = () => {
@@ -110,19 +113,16 @@ const Map = ({ paths, stops }) => {
 
   const startSimulation = useCallback(() => {
     console.log("startSimulation");
-    if (interval) {
-      window.clearInterval(interval);
-    }
     setProgress(null);
     initialDate = new Date();
-    interval = window.setInterval(moveObject, 5000);
-  }, [interval, initialDate]);
+  }, [initialDate]);
 
   useEffect(() => {
     console.log("currentPosition", currentPosition);
   }, [currentPosition]);
 
   const mapUpdate = () => {
+    console.log("mapUpdate");
     const distance = getDistance();
     if (!distance || paths.length < 2) {
         return; // Ensure there are at least two points to work with
