@@ -39,8 +39,12 @@ const Map = ({ paths, stops }) => {
     };
   }, [paths]);
 
+  useEffect(() => {
+    mapUpdate();
+  }, [paths, progress]);
+
   const getDistance = () => {
-    const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
+    const differentInTime = (new Date() - initialDate) / 5000; // pass to seconds
     return differentInTime * velocity; // d = v*t -- thanks Newton!
   };
 
@@ -108,7 +112,7 @@ const Map = ({ paths, stops }) => {
     }
     setProgress(null);
     initialDate = new Date();
-    interval = window.setInterval(moveObject, 1000);
+    interval = window.setInterval(moveObject, 5000);
   }, [interval, initialDate]);
 
   const mapUpdate = () => {
