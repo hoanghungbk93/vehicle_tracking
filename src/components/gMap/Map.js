@@ -189,7 +189,7 @@ const Map = ({ paths, stops }) => {
       <div className='gMapCont'>
         <GoogleMap
           ref={mapRef} // Attach the ref to the GoogleMap component
-          defaultZoom={17}
+          defaultZoom={10}
           center={currentPosition ? currentPosition.toJSON() : { lat: 0, lng: 0 }}
         >
           <Polyline

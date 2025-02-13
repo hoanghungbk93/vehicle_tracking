@@ -35,7 +35,7 @@ function Header({title}) {
                 <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Google Map Vehicle Live Tracking Simulation
+                Google Map Train Live Tracking Simulation
             </Typography>
             
                 <div>
