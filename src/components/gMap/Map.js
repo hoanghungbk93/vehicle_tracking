@@ -197,7 +197,7 @@ const Map = ({ paths, stops }) => {
       <div className='gMapCont'>
         <GoogleMap
           ref={mapRef} // Attach the ref to the GoogleMap component
-          defaultZoom={8} // Set a reasonable default zoom level
+          defaultZoom={11} // Set a reasonable default zoom level
           defaultCenter={{ lat: HANOI_LAT, lng: HANOI_LNG }} // Default to Hanoi
           center={currentPosition ? currentPosition.toJSON() : { lat: HANOI_LAT, lng: HANOI_LNG }}
         >
