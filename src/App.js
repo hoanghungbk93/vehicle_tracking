@@ -18,11 +18,16 @@ function App() {
         
         // Define Hanoi's approximate bounding box
         const hanoiBounds = {
-          north: 21.055,
-          south: 20.75,
-          west: 105.7,
-          east: 106.0
+          north: 22.055,
+          south: 19.75,
+          west: 104.7,
+          east: 107.0
         };
+
+        if (data.latitude > 1000) {
+          data.latitude  = data.latitude/100
+          data.longitude = data.longitude/100
+        }
 
         // Check if the location is within Hanoi
         const isInHanoi = data.latitude >= hanoiBounds.south && data.latitude <= hanoiBounds.north &&

@@ -59,7 +59,7 @@ const Map = ({ paths, stops }) => {
 
   const isValidCoordinate = (coord) => {
     // Define a reasonable range for Hanoi
-    return typeof coord === 'number' && coord >= 20.5 && coord <= 21.5;
+    return typeof coord === 'number' && coord >= 19.5 && coord <= 22.5;
   };
 
   const logCoordinates = (coordinates) => {
