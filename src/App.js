@@ -28,27 +28,26 @@ function App() {
         const isInHanoi = data.latitude >= hanoiBounds.south && data.latitude <= hanoiBounds.north &&
                           data.longitude >= hanoiBounds.west && data.longitude <= hanoiBounds.east;
 
-        if (isInHanoi) {
-          setLocation(data);
+        // If not in Hanoi, set to a default location within Hanoi
+        const locationData = isInHanoi ? data : { latitude: 21.0285, longitude: 105.8542 }; // Default to central Hanoi
 
-          setPath((prevPath) => {
-            const newPath = [
-              ...prevPath,
-              {
-                lat: data.latitude,
-                lng: data.longitude,
-                distance: 0,
-              },
-            ];
-            // Limit the path to 100 points
-            if (newPath.length > 100) {
-              newPath.shift(); // Remove the first element
-            }
-            return newPath;
-          });
-        } else {
-          console.warn('Location is outside Hanoi, skipping this point.');
-        }
+        setLocation(locationData);
+
+        setPath((prevPath) => {
+          const newPath = [
+            ...prevPath,
+            {
+              lat: locationData.latitude,
+              lng: locationData.longitude,
+              distance: 0,
+            },
+          ];
+          // Limit the path to 100 points
+          if (newPath.length > 100) {
+            newPath.shift(); // Remove the first element
+          }
+          return newPath;
+        });
       } catch (error) {
         console.error('Error fetching location:', error);
       }
