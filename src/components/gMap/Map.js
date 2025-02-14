@@ -9,6 +9,9 @@ import {
 import Card from '@mui/material/Card';
 import '../../App.css';
 
+const HANOI_LAT = 21.0285;
+const HANOI_LNG = 105.8542;
+
 const Map = ({ paths, stops }) => {
   const [progress, setProgress] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null); // Track current position
@@ -54,7 +57,10 @@ const Map = ({ paths, stops }) => {
     return differentInTime * velocity; // d = v*t -- thanks Newton!
   };
 
-  const isValidCoordinate = (coord) => typeof coord === 'number' && isFinite(coord);
+  const isValidCoordinate = (coord) => {
+    // Define a reasonable range for Hanoi
+    return typeof coord === 'number' && coord >= 20.5 && coord <= 21.5;
+  };
 
   const logCoordinates = (coordinates) => {
     console.log("Coordinates:", coordinates);
@@ -174,7 +180,9 @@ const Map = ({ paths, stops }) => {
     if (mapRef.current && paths.length > 0) {
       const bounds = new window.google.maps.LatLngBounds();
       paths.forEach(({ lat, lng }) => {
-        bounds.extend(new window.google.maps.LatLng(lat, lng));
+        const validLat = isValidCoordinate(lat) ? lat : HANOI_LAT;
+        const validLng = isValidCoordinate(lng) ? lng : HANOI_LNG;
+        bounds.extend(new window.google.maps.LatLng(validLat, validLng));
       });
       mapRef.current.fitBounds(bounds);
     }
@@ -189,11 +197,15 @@ const Map = ({ paths, stops }) => {
       <div className='gMapCont'>
         <GoogleMap
           ref={mapRef} // Attach the ref to the GoogleMap component
-          defaultZoom={5}
-          center={currentPosition ? currentPosition.toJSON() : { lat: 0, lng: 0 }}
+          defaultZoom={12} // Set a reasonable default zoom level
+          defaultCenter={{ lat: HANOI_LAT, lng: HANOI_LNG }} // Default to Hanoi
+          center={currentPosition ? currentPosition.toJSON() : { lat: HANOI_LAT, lng: HANOI_LNG }}
         >
           <Polyline
-            path={paths.filter(p => isValidCoordinate(p.lat) && isValidCoordinate(p.lng))}
+            path={paths.map(p => ({
+              lat: isValidCoordinate(p.lat) ? p.lat : HANOI_LAT,
+              lng: isValidCoordinate(p.lng) ? p.lng : HANOI_LNG
+            }))}
             options={{
               strokeColor: "#0088FF",
               strokeWeight: 6,
@@ -202,12 +214,12 @@ const Map = ({ paths, stops }) => {
             }}
           />
 
-          {stops?.data?.filter(stop => isValidCoordinate(stop.lat) && isValidCoordinate(stop.lng)).map((stop, index) => (
+          {stops?.data?.map((stop, index) => (
             <Marker
               key={index}
               position={{
-                lat: stop.lat,
-                lng: stop.lng
+                lat: isValidCoordinate(stop.lat) ? stop.lat : HANOI_LAT,
+                lng: isValidCoordinate(stop.lng) ? stop.lng : HANOI_LNG
               }}
               title={stop.id}
               label={`${index + 1}`}
