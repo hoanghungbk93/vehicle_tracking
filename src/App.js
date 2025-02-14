@@ -29,7 +29,7 @@ function App() {
                           data.longitude >= hanoiBounds.west && data.longitude <= hanoiBounds.east;
 
         // If not in Hanoi, set to a default location within Hanoi
-        const locationData = isInHanoi ? data : { latitude: 21.0285, longitude: 105.8542 }; // Default to central Hanoi
+        const locationData = isInHanoi ? data : { latitude: 21.0043523, longitude: 105.842492 }; // Default to central Hanoi
 
         setLocation(locationData);
 

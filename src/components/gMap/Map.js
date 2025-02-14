@@ -9,8 +9,8 @@ import {
 import Card from '@mui/material/Card';
 import '../../App.css';
 
-const HANOI_LAT = 21.0285;
-const HANOI_LNG = 105.8542;
+const HANOI_LAT = 21.0043523;
+const HANOI_LNG = 105.842492;
 
 const Map = ({ paths, stops }) => {
   const [progress, setProgress] = useState(null);
