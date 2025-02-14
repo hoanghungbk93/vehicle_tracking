@@ -188,9 +188,9 @@ const Map = ({ paths, stops }) => {
     }
   };
 
-  useEffect(() => {
-    fitMapToBounds(); // Fit map to bounds whenever paths change
-  }, [paths]);
+  // useEffect(() => {
+  //   fitMapToBounds(); // Fit map to bounds whenever paths change
+  // }, [paths]);
 
   return (
     <Card variant="outlined">
