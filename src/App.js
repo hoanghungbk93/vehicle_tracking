@@ -15,23 +15,40 @@ function App() {
       try {
         const response = await fetch(`${config.backendUrl}/gps/location`);
         const data = await response.json();
-        setLocation(data);
+        
+        // Define Hanoi's approximate bounding box
+        const hanoiBounds = {
+          north: 21.055,
+          south: 20.75,
+          west: 105.7,
+          east: 106.0
+        };
 
-        setPath((prevPath) => {
-          const newPath = [
-            ...prevPath,
-            {
-              lat: data.latitude,
-              lng: data.longitude,
-              distance: 0,
-            },
-          ];
-          // Limit the path to 100 points
-          if (newPath.length > 100) {
-            newPath.shift(); // Remove the first element
-          }
-          return newPath;
-        });
+        // Check if the location is within Hanoi
+        const isInHanoi = data.latitude >= hanoiBounds.south && data.latitude <= hanoiBounds.north &&
+                          data.longitude >= hanoiBounds.west && data.longitude <= hanoiBounds.east;
+
+        if (isInHanoi) {
+          setLocation(data);
+
+          setPath((prevPath) => {
+            const newPath = [
+              ...prevPath,
+              {
+                lat: data.latitude,
+                lng: data.longitude,
+                distance: 0,
+              },
+            ];
+            // Limit the path to 100 points
+            if (newPath.length > 100) {
+              newPath.shift(); // Remove the first element
+            }
+            return newPath;
+          });
+        } else {
+          console.warn('Location is outside Hanoi, skipping this point.');
+        }
       } catch (error) {
         console.error('Error fetching location:', error);
       }
