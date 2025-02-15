@@ -11,55 +11,57 @@ function App() {
   const [path, setPath] = useState([]);
 
   useEffect(() => {
+    const generateRandomLocation = (center, radius) => {
+        const y0 = center.latitude;
+        const x0 = center.longitude;
+        const rd = radius / 111300; // Convert radius from meters to degrees
+
+        const u = Math.random();
+        const v = Math.random();
+
+        const w = rd * Math.sqrt(u);
+        const t = 2 * Math.PI * v;
+        const x = w * Math.cos(t);
+        const y = w * Math.sin(t);
+
+        const newLat = y + y0;
+        const newLng = x + x0;
+
+        return { latitude: newLat, longitude: newLng };
+    };
+
     const fetchLocation = async () => {
-      try {
-        const response = await fetch(`${config.backendUrl}/gps/location`);
-        const data = await response.json();
-        
-        // Define Hanoi's approximate bounding box
-        const hanoiBounds = {
-          north: 22.055,
-          south: 19.75,
-          west: 104.7,
-          east: 107.0
-        };
+        try {
+            // Generate random location around the central point
+            const randomLocation = generateRandomLocation(
+                { latitude: 21.0043523, longitude: 105.842492 },
+                100 // Radius in meters
+            );
 
-        if (data.latitude > 1000) {
-          data.latitude  = data.latitude/100
-          data.longitude = data.longitude/100
+            setLocation(randomLocation);
+
+            setPath((prevPath) => {
+                const newPath = [
+                    ...prevPath,
+                    {
+                        lat: randomLocation.latitude,
+                        lng: randomLocation.longitude,
+                        distance: 0,
+                    },
+                ];
+                // Limit the path to 100 points
+                if (newPath.length > 100) {
+                    newPath.shift(); // Remove the first element
+                }
+                return newPath;
+            });
+        } catch (error) {
+            console.error('Error generating location:', error);
         }
-
-        // Check if the location is within Hanoi
-        const isInHanoi = data.latitude >= hanoiBounds.south && data.latitude <= hanoiBounds.north &&
-                          data.longitude >= hanoiBounds.west && data.longitude <= hanoiBounds.east;
-
-        // If not in Hanoi, set to a default location within Hanoi
-        const locationData = isInHanoi ? data : { latitude: 21.0043523, longitude: 105.842492 }; // Default to central Hanoi
-
-        setLocation(locationData);
-
-        setPath((prevPath) => {
-          const newPath = [
-            ...prevPath,
-            {
-              lat: locationData.latitude,
-              lng: locationData.longitude,
-              distance: 0,
-            },
-          ];
-          // Limit the path to 100 points
-          if (newPath.length > 100) {
-            newPath.shift(); // Remove the first element
-          }
-          return newPath;
-        });
-      } catch (error) {
-        console.error('Error fetching location:', error);
-      }
     };
 
     fetchLocation();
-    const interval = setInterval(fetchLocation, 5000);
+    const interval = setInterval(fetchLocation, 2000);
 
     return () => clearInterval(interval);
   }, []);
